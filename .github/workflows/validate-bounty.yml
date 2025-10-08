@@ -1,0 +1,141 @@
+name: Validate Bounty Schema
+
+on:
+  pull_request:
+    paths:
+      - 'bounties/**/*.mdx'
+      - 'config/schema.json'
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate-bounty:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: |
+          npm install -g ajv-cli
+          npm install -g js-yaml
+
+      - name: Extract front-matter from MDX files
+        id: extract-frontmatter
+        run: |
+          # Create a temporary directory for extracted front-matter
+          mkdir -p /tmp/frontmatter
+          
+          # Extract front-matter from all MDX files in bounties/
+          for file in bounties/*.mdx; do
+            if [ -f "$file" ]; then
+              filename=$(basename "$file" .mdx)
+              # Extract YAML front-matter between --- markers
+              sed -n '/^---$/,/^---$/p' "$file" | sed '1d;$d' > "/tmp/frontmatter/${filename}.yaml"
+            fi
+          done
+
+      - name: Validate front-matter against schema
+        run: |
+          # Validate each extracted front-matter file
+          for yaml_file in /tmp/frontmatter/*.yaml; do
+            if [ -f "$yaml_file" ]; then
+              filename=$(basename "$yaml_file" .yaml)
+              echo "Validating $filename..."
+              
+              # Convert YAML to JSON for validation
+              yaml_file_json="/tmp/frontmatter/${filename}.json"
+              js-yaml "$yaml_file" > "$yaml_file_json"
+              
+              # Validate against schema
+              if ! ajv validate -s config/schema.json -d "$yaml_file_json"; then
+                echo "❌ Validation failed for $filename"
+                ajv validate -s config/schema.json -d "$yaml_file_json" --verbose
+                exit 1
+              else
+                echo "✅ Validation passed for $filename"
+              fi
+            fi
+          done
+
+      - name: Validate dates
+        run: |
+          for yaml_file in /tmp/frontmatter/*.yaml; do
+            if [ -f "$yaml_file" ]; then
+              filename=$(basename "$yaml_file" .yaml)
+              echo "Checking dates for $filename..."
+              
+              # Extract dates using yq or similar tool
+              opens_at=$(js-yaml "$yaml_file" | jq -r '.opens_at')
+              closes_at=$(js-yaml "$yaml_file" | jq -r '.closes_at')
+              
+              # Convert to timestamps for comparison
+              opens_timestamp=$(date -d "$opens_at" +%s)
+              closes_timestamp=$(date -d "$closes_at" +%s)
+              current_timestamp=$(date +%s)
+              
+              # Check if opens_at is in the future
+              if [ "$opens_timestamp" -lt "$current_timestamp" ]; then
+                echo "❌ opens_at must be in the future for $filename"
+                exit 1
+              fi
+              
+              # Check if closes_at is after opens_at
+              if [ "$closes_timestamp" -le "$opens_timestamp" ]; then
+                echo "❌ closes_at must be after opens_at for $filename"
+                exit 1
+              fi
+              
+              echo "✅ Date validation passed for $filename"
+            fi
+          done
+
+      - name: Check required fields
+        run: |
+          for yaml_file in /tmp/frontmatter/*.yaml; do
+            if [ -f "$yaml_file" ]; then
+              filename=$(basename "$yaml_file" .yaml)
+              echo "Checking required fields for $filename..."
+              
+              # Check for required fields
+              required_fields=("bounty_id" "title" "payout_xlm" "model" "opens_at" "closes_at" "target_repo" "tech_area" "reviewers" "status" "difficulty")
+              
+              for field in "${required_fields[@]}"; do
+                if ! js-yaml "$yaml_file" | jq -e ".$field" > /dev/null; then
+                  echo "❌ Missing required field '$field' in $filename"
+                  exit 1
+                fi
+              done
+              
+              echo "✅ Required fields check passed for $filename"
+            fi
+          done
+
+      - name: Validate bounty_id format
+        run: |
+          for yaml_file in /tmp/frontmatter/*.yaml; do
+            if [ -f "$yaml_file" ]; then
+              filename=$(basename "$yaml_file" .yaml)
+              bounty_id=$(js-yaml "$yaml_file" | jq -r '.bounty_id')
+              
+              # Check format: wb-2024-001
+              if ! echo "$bounty_id" | grep -qE '^[a-z]{2}-[0-9]{4}-[0-9]{3}$'; then
+                echo "❌ Invalid bounty_id format '$bounty_id' in $filename. Expected format: wb-2024-001"
+                exit 1
+              fi
+              
+              echo "✅ bounty_id format valid for $filename"
+            fi
+          done
+
+      - name: Summary
+        run: |
+          echo "🎉 All bounty validations passed!"
+          echo "Validated files:"
+          ls -la /tmp/frontmatter/*.yaml | wc -l | xargs echo "Total bounties validated:"

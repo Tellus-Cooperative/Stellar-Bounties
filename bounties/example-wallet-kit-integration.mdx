@@ -1,0 +1,74 @@
+---
+bounty_id: "wb-2025-001"
+title: "Add QR Code Scanner Component to Wallet Kit"
+payout_xlm: 3000
+model: "first-come"
+opens_at: "2025-01-15T00:00:00Z"
+closes_at: "2025-02-15T23:59:59Z"
+target_repo: "stellar/wallet-kit"
+target_path: "src/components/"
+tech_area: "Wallet Kit"
+reviewers: ["stellar-maintainer-1", "stellar-maintainer-2"]
+status: "open"
+difficulty: "intermediate"
+tags: ["good-first-issue", "help-wanted"]
+sponsor: "Tellus Cooperative Foundation"
+---
+
+# Summary
+
+Implement a reusable QR code scanner component for the Wallet Kit that can scan Stellar addresses, transaction XDRs, and other Stellar-related QR codes.
+
+## Scope
+
+### In Scope
+- Create a new `QRScanner` component in `src/components/`
+- Support scanning Stellar addresses (G... format)
+- Support scanning transaction XDR strings
+- Provide proper error handling for invalid QR codes
+- Include TypeScript types and proper prop interfaces
+- Add comprehensive unit tests
+- Update component documentation
+
+### Out of Scope
+- Camera permission handling (assume granted)
+- Custom QR code generation
+- Offline QR code validation
+- Integration with specific wallet implementations
+
+## Acceptance Criteria
+
+- [ ] Component builds without TypeScript errors
+- [ ] All existing tests pass
+- [ ] New component has >90% test coverage
+- [ ] Component follows Wallet Kit design patterns
+- [ ] Documentation includes usage examples
+- [ ] Component is accessible (ARIA labels, keyboard navigation)
+- [ ] Error states are properly handled and displayed
+- [ ] Performance is acceptable on mobile devices
+
+## Getting Started
+
+- Review existing Wallet Kit components for patterns
+- Check [Wallet Kit documentation](https://github.com/stellar/wallet-kit)
+- Look at similar QR scanner implementations in the ecosystem
+- Start with the component scaffold in `src/components/QRScanner.tsx`
+
+## Testing & Verification
+
+1. Clone the wallet-kit repository
+2. Install dependencies: `npm install`
+3. Run tests: `npm test`
+4. Start development server: `npm run dev`
+5. Test QR scanning with sample Stellar addresses
+6. Verify error handling with invalid QR codes
+7. Check mobile responsiveness
+
+## Related Issues
+
+- [Wallet Kit Component Architecture Discussion](https://github.com/stellar/wallet-kit/issues/123)
+- [QR Code Standards for Stellar](https://github.com/stellar/stellar-protocol/issues/456)
+
+## Additional Notes
+
+The component should be framework-agnostic and work with React, Vue, and other frameworks that Wallet Kit supports. Focus on clean, reusable code that follows the established patterns in the repository.

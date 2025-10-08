@@ -1,0 +1,78 @@
+---
+bounty_id: "wb-2025-002"
+title: "Fix Soroban SDK TypeScript Definitions for Contract Calls"
+payout_xlm: 4500
+model: "judged"
+opens_at: "2025-01-20T00:00:00Z"
+closes_at: "2025-03-20T23:59:59Z"
+target_repo: "stellar/js-stellar-sdk"
+target_path: "src/contract.ts"
+tech_area: "Soroban SDK"
+reviewers: ["stellar-maintainer-1", "stellar-maintainer-3"]
+status: "open"
+difficulty: "advanced"
+tags: ["bug", "help-wanted"]
+sponsor: "Tellus Cooperative Foundation"
+max_claims: 3
+---
+
+# Summary
+
+Fix TypeScript type definitions in the Soroban SDK for contract invocation methods to properly handle generic types and improve developer experience.
+
+## Scope
+
+### In Scope
+- Update TypeScript definitions in `src/contract.ts`
+- Fix generic type constraints for contract method calls
+- Improve type inference for contract parameters and return values
+- Add proper JSDoc comments with examples
+- Update related test files to verify type correctness
+- Ensure backward compatibility with existing code
+
+### Out of Scope
+- Changes to runtime behavior
+- Breaking changes to public API
+- Documentation website updates
+- Performance optimizations
+
+## Acceptance Criteria
+
+- [ ] All TypeScript compilation errors resolved
+- [ ] Type definitions properly infer generic contract types
+- [ ] Existing tests pass without modification
+- [ ] New tests verify type correctness
+- [ ] JSDoc comments include usage examples
+- [ ] No breaking changes to public API
+- [ ] TypeScript strict mode passes
+- [ ] IDE autocomplete works correctly
+
+## Getting Started
+
+- Review the [Soroban SDK documentation](https://github.com/stellar/js-stellar-sdk)
+- Examine current type definitions in `src/contract.ts`
+- Check existing issues related to TypeScript types
+- Look at contract invocation examples in the test suite
+
+## Testing & Verification
+
+1. Clone the js-stellar-sdk repository
+2. Install dependencies: `npm install`
+3. Run TypeScript compilation: `npm run build`
+4. Run tests: `npm test`
+5. Verify type checking: `npm run type-check`
+6. Test with sample contract invocation code
+7. Verify IDE autocomplete functionality
+
+## Related Issues
+
+- [TypeScript Generic Types Issue](https://github.com/stellar/js-stellar-sdk/issues/789)
+- [Contract Call Type Inference Problems](https://github.com/stellar/js-stellar-sdk/issues/812)
+
+## Technical Details
+
+The issue involves the `invokeContract` method and related functions not properly inferring generic types when calling contract methods. The fix should maintain the existing API while improving type safety and developer experience.
+
+## Additional Notes
+
+This is a judged bounty - multiple contributors may submit solutions, and the best implementation will be selected based on code quality, type safety, and maintainability.

@@ -1,0 +1,157 @@
+name: Bounty Triage
+
+on:
+  issues:
+    types: [opened, labeled]
+  pull_request:
+    types: [opened, closed]
+
+jobs:
+  issue-triage:
+    if: github.event_name == 'issues'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Add guidance on bounty issues
+        if: contains(github.event.issue.labels.*.name, 'bounty')
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const body = `🎯 **Bounty Available!**
+            
+            Thanks for opening a bounty. Here's how contributors can participate:
+            
+            **For Contributors:**
+            - Comment \`/claim\` to request assignment
+            - Fork the target repository and create a feature branch
+            - Implement the changes according to the Acceptance Criteria
+            - Open a PR with \`Fixes #${context.payload.issue.number}\` in the description
+            - Include the required proof JSON block in your PR body (generated via Passport app)
+            - Comment here with your PR URL when ready
+            
+            **Review Process:**
+            - Maintainers will review within ~48 hours
+            - Outcomes: Approved (merge), Needs Changes, or Out of Scope
+            - When merged, bounty will be labeled \`payout-approved\` for XLM payout
+            
+            **Resources:**
+            - [Rules & Criteria](docs/rules-and-criteria.md)
+            - [FAQ](docs/faq.md)
+            - [Comment Templates](docs/comment-templates.md)`;
+            
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body
+            });
+
+  pr-triage:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Label PR opened
+        if: github.event.action == 'opened'
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: in-review
+
+      - name: Check for bounty reference
+        if: github.event.action == 'opened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prBody = pr.body || '';
+            
+            // Look for "Fixes #" pattern
+            const bountyMatch = prBody.match(/Fixes #(\d+)/);
+            if (bountyMatch) {
+              const issueNumber = bountyMatch[1];
+              console.log(`PR references bounty issue #${issueNumber}`);
+              
+              // Add bounty label to the PR
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                labels: ['bounty']
+              });
+            }
+
+      - name: Mark payout-approved on merge if linked to bounty
+        if: github.event.action == 'closed' && github.event.pull_request.merged == true
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prBody = pr.body || '';
+            
+            // Look for "Fixes #" pattern
+            const bountyMatch = prBody.match(/Fixes #(\d+)/);
+            if (bountyMatch) {
+              const issueNumber = bountyMatch[1];
+              
+              try {
+                // Get the issue to check if it has bounty label
+                const issue = await github.rest.issues.get({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issueNumber
+                });
+                
+                const hasBounty = issue.data.labels.some(l => l.name === 'bounty');
+                if (hasBounty) {
+                  // Add payout-approved label
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    labels: ['payout-approved']
+                  });
+                  
+                  // Add payout comment
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issueNumber,
+                    body: `🎉 **Merged!** 
+                    
+                    Labeling this bounty as \`payout-approved\`. XLM payout will be processed to your Passport wallet within 3–7 days.
+                    
+                    Thank you for contributing to the Stellar ecosystem!`
+                  });
+                  
+                  console.log(`Added payout-approved label to issue #${issueNumber}`);
+                }
+              } catch (error) {
+                console.log(`Could not process issue #${issueNumber}: ${error.message}`);
+              }
+            }
+
+      - name: Add proof verification reminder
+        if: github.event.action == 'opened'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request;
+            const prBody = pr.body || '';
+            
+            // Check if PR has bounty label and proof JSON block
+            const hasBountyLabel = pr.labels.some(l => l.name === 'bounty');
+            const hasProofBlock = prBody.includes('"schema": "passport-pr-proof@1.0"');
+            
+            if (hasBountyLabel && !hasProofBlock) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body: `⚠️ **Proof JSON Block Required**
+                
+                This PR appears to be for a bounty but is missing the required proof JSON block.
+                
+                Please add the proof JSON block to your PR description. You can generate this using the Passport app.
+                
+                See the [PR template](.github/pull_request_template.md) for the required format.`
+              });
+            }

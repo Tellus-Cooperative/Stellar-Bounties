@@ -1,0 +1,83 @@
+---
+bounty_id: "wb-2025-003"
+title: "Improve Soroban Smart Contract Development Guide"
+payout_xlm: 2000
+model: "multi-capped"
+opens_at: "2025-01-25T00:00:00Z"
+closes_at: "2025-03-25T23:59:59Z"
+target_repo: "stellar/docs"
+target_path: "docs/soroban/"
+tech_area: "Docs"
+reviewers: ["stellar-maintainer-3", "stellar-maintainer-6"]
+status: "open"
+difficulty: "beginner"
+tags: ["docs", "good-first-issue"]
+sponsor: "Tellus Cooperative Foundation"
+max_claims: 5
+---
+
+# Summary
+
+Enhance the Soroban smart contract development documentation with clearer examples, better structure, and improved beginner-friendly explanations.
+
+## Scope
+
+### In Scope
+- Improve the "Getting Started with Soroban" guide
+- Add more practical examples for common contract patterns
+- Enhance code examples with better comments
+- Add troubleshooting section for common issues
+- Improve the contract deployment walkthrough
+- Add links to relevant tools and resources
+
+### Out of Scope
+- Complete rewrite of existing documentation
+- Changes to API reference documentation
+- Video content or multimedia
+- Translation to other languages
+
+## Acceptance Criteria
+
+- [ ] Documentation builds without errors
+- [ ] All code examples are tested and working
+- [ ] Examples include proper error handling
+- [ ] Beginner concepts are clearly explained
+- [ ] Links to external resources are valid
+- [ ] Code examples follow best practices
+- [ ] Documentation is reviewed for clarity
+- [ ] No broken internal links
+
+## Getting Started
+
+- Review the [current Soroban documentation](https://docs.stellar.org/docs/soroban/)
+- Check the [docs repository structure](https://github.com/stellar/docs)
+- Look at existing examples in the `docs/soroban/` directory
+- Consider common questions from the community
+
+## Testing & Verification
+
+1. Clone the docs repository
+2. Install dependencies: `npm install`
+3. Build documentation: `npm run build`
+4. Start local server: `npm run dev`
+5. Verify all examples work as documented
+6. Check for broken links: `npm run check-links`
+7. Review content for clarity and accuracy
+
+## Related Issues
+
+- [Documentation Feedback Collection](https://github.com/stellar/docs/issues/234)
+- [Beginner Developer Survey Results](https://github.com/stellar/docs/issues/267)
+
+## Content Areas
+
+Focus on these specific areas:
+1. **Contract Structure**: Clear explanation of contract anatomy
+2. **Storage Patterns**: Common data storage approaches
+3. **Error Handling**: Best practices for contract errors
+4. **Testing**: How to test contracts locally
+5. **Deployment**: Step-by-step deployment guide
+
+## Additional Notes
+
+This is a multi-capped bounty - up to 5 contributors can be awarded for different sections of the documentation improvements. Each contributor should focus on a specific area to avoid conflicts.

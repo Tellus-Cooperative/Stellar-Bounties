@@ -1,0 +1,148 @@
+---
+# Stellar Bounties Configuration
+# This file contains allowlists for repos, sponsors, reviewers, and categories
+# Changes must be approved via PR to maintain security and quality
+
+# Approved repositories for bounties
+# Criteria: public goods, not primary for-profit, community-supported, Stellar ecosystem relevance
+repos:
+  - name: "stellar/wallet-kit"
+    description: "React components for Stellar wallet integration"
+    maintainers: ["stellar-maintainer-1", "stellar-maintainer-2"]
+    category: "Wallet Kit"
+  - name: "stellar/js-stellar-sdk"
+    description: "JavaScript SDK for Stellar"
+    maintainers: ["stellar-maintainer-1", "stellar-maintainer-3"]
+    category: "Soroban SDK"
+  - name: "stellar/soroban-examples"
+    description: "Example Soroban smart contracts"
+    maintainers: ["stellar-maintainer-2", "stellar-maintainer-4"]
+    category: "Soroban Contracts"
+  - name: "stellar/stellar-cli"
+    description: "Command-line tools for Stellar"
+    maintainers: ["stellar-maintainer-1", "stellar-maintainer-5"]
+    category: "CLI"
+  - name: "stellar/docs"
+    description: "Stellar documentation"
+    maintainers: ["stellar-maintainer-3", "stellar-maintainer-6"]
+    category: "Docs"
+
+# Approved sponsors
+sponsors:
+  - name: "Tellus Cooperative Foundation"
+    contact: "bounties@telluscoop.org"
+    max_monthly_budget_xlm: 50000
+  - name: "Stellar Development Foundation"
+    contact: "bounties@stellar.org"
+    max_monthly_budget_xlm: 30000
+  - name: "Community Fund"
+    contact: "community@telluscoop.org"
+    max_monthly_budget_xlm: 25000
+
+# Approved reviewers by category
+reviewers:
+  wallet_kit:
+    - "stellar-maintainer-1"
+    - "stellar-maintainer-2"
+  soroban_sdk:
+    - "stellar-maintainer-1"
+    - "stellar-maintainer-3"
+  soroban_contracts:
+    - "stellar-maintainer-2"
+    - "stellar-maintainer-4"
+  dev_tools:
+    - "stellar-maintainer-1"
+    - "stellar-maintainer-5"
+  cli:
+    - "stellar-maintainer-1"
+    - "stellar-maintainer-5"
+  docs:
+    - "stellar-maintainer-3"
+    - "stellar-maintainer-6"
+  examples:
+    - "stellar-maintainer-2"
+    - "stellar-maintainer-4"
+
+# Technology categories
+categories:
+  - name: "Wallet Kit"
+    description: "React components and wallet integration tools"
+    base_payout_xlm: 2000
+  - name: "Soroban SDK"
+    description: "Software development kits for Soroban"
+    base_payout_xlm: 3000
+  - name: "Soroban Contracts"
+    description: "Smart contract development and examples"
+    base_payout_xlm: 4000
+  - name: "Dev Tools"
+    description: "Development tools and utilities"
+    base_payout_xlm: 2500
+  - name: "CLI"
+    description: "Command-line interface tools"
+    base_payout_xlm: 2000
+  - name: "Docs"
+    description: "Documentation improvements"
+    base_payout_xlm: 1500
+  - name: "Examples"
+    description: "Code examples and tutorials"
+    base_payout_xlm: 2000
+  - name: "Other"
+    description: "Miscellaneous contributions"
+    base_payout_xlm: 1500
+
+# Difficulty multipliers
+difficulty_multipliers:
+  beginner: 1.0
+  intermediate: 1.5
+  advanced: 2.0
+
+# Model-specific settings
+model_settings:
+  first_come:
+    max_claims: 1
+    auto_approve: false
+  judged:
+    max_claims: 10
+    auto_approve: false
+    judging_period_days: 7
+  multi_capped:
+    max_claims: 5
+    auto_approve: true
+  custom:
+    max_claims: 1
+    auto_approve: false
+---
+
+# Configuration Guidelines
+
+## Repository Allowlist Criteria
+
+Repositories must meet the following criteria to be added to the allowlist:
+
+1. **Public Goods**: Not primarily for-profit companies' core products
+2. **Community Supported**: Used by companies but maintained as public goods
+3. **Stellar Ecosystem Relevance**: Directly related to Stellar/Soroban development
+4. **Dependency Weight**: Considered by how many people depend on the repository
+5. **Maintenance Burden**: Historical issue volume indicates ongoing maintenance needs
+
+## Sponsor Approval Process
+
+New sponsors must:
+- Provide clear contact information
+- Specify monthly budget limits
+- Agree to payout terms and conditions
+- Be approved by Stellar Development Foundation
+
+## Reviewer Requirements
+
+Reviewers must:
+- Have maintainer access to target repositories
+- Demonstrate expertise in the relevant technology area
+- Commit to 48-hour review SLA
+- Follow established review guidelines
+
+## Payout Calculation
+
+Base payout = category base × difficulty multiplier
+
+Example: Wallet Kit (2000 XLM) × Intermediate (1.5) = 3000 XLM

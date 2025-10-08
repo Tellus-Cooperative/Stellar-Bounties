@@ -1,0 +1,81 @@
+- name: bounty
+  color: '5319E7'
+  description: "Open bounty available for contribution"
+- name: payout-approved
+  color: '17A398'
+  description: "Merged & approved for payout"
+- name: payout-sent
+  color: '0E8A16'
+  description: "Payout processed to Passport wallet"
+- name: partial-award
+  color: 'FBCA04'
+  description: "Partial payout awarded"
+- name: in-review
+  color: '1D76DB'
+  description: "Under review by maintainers"
+- name: needs-changes
+  color: 'B60205'
+  description: "Revisions requested"
+- name: needs-info
+  color: 'FBCA04'
+  description: "Awaiting details from contributor"
+- name: claimed
+  color: '7057FF'
+  description: "Bounty claimed by contributor"
+- name: completed
+  color: '0E8A16'
+  description: "Bounty completed successfully"
+- name: cancelled
+  color: 'CCCCCC'
+  description: "Bounty cancelled or expired"
+- name: duplicate
+  color: 'CCCCCC'
+  description: "Duplicate of another bounty"
+- name: invalid
+  color: 'E4E669'
+  description: "Not actionable or not following template"
+- name: good-first-issue
+  color: '7057FF'
+  description: "Beginner-friendly bounty"
+- name: help-wanted
+  color: '128A0C'
+  description: "Community help requested"
+- name: docs
+  color: '9A6700'
+  description: "Documentation-related bounty"
+- name: security
+  color: '8B0000'
+  description: "Security-sensitive bounty"
+- name: bug
+  color: 'D73A4A'
+  description: "Bug fix bounty"
+- name: feature
+  color: 'A2EEEF'
+  description: "Feature implementation bounty"
+- name: wallet-kit
+  color: '5319E7'
+  description: "Wallet Kit related bounty"
+- name: soroban-sdk
+  color: '0E8A16'
+  description: "Soroban SDK related bounty"
+- name: soroban-contracts
+  color: '8B0000'
+  description: "Soroban contracts related bounty"
+- name: dev-tools
+  color: 'FBCA04'
+  description: "Developer tools related bounty"
+- name: cli
+  color: 'CCCCCC'
+  description: "CLI tools related bounty"
+- name: examples
+  color: 'A2EEEF'
+  description: "Code examples related bounty"
+- name: beginner
+  color: '7057FF'
+  description: "Beginner difficulty level"
+- name: intermediate
+  color: 'FBCA04'
+  description: "Intermediate difficulty level"
+- name: advanced
+  color: '8B0000'
+  description: "Advanced difficulty level"

@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Bounty Front-matter Schema",
+  "description": "JSON Schema for validating bounty MDX front-matter",
+  "required": [
+    "bounty_id",
+    "title",
+    "payout_xlm",
+    "model",
+    "opens_at",
+    "closes_at",
+    "target_repo",
+    "tech_area",
+    "reviewers",
+    "status",
+    "difficulty"
+  ],
+  "properties": {
+    "bounty_id": {
+      "type": "string",
+      "pattern": "^[a-z]{2}-[0-9]{4}-[0-9]{3}$",
+      "description": "Unique bounty identifier (e.g., wb-2025-001)"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 100,
+      "description": "Concise bounty title"
+    },
+    "payout_xlm": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 100000,
+      "description": "Fixed XLM payout amount"
+    },
+    "model": {
+      "type": "string",
+      "enum": ["first-come", "judged", "multi-capped", "custom"],
+      "description": "Bounty completion model"
+    },
+    "opens_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 datetime when bounty opens"
+    },
+    "closes_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 datetime when bounty closes"
+    },
+    "target_repo": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+$",
+      "description": "Target repository (owner/repo)"
+    },
+    "target_path": {
+      "type": "string",
+      "description": "Optional specific path within target repo"
+    },
+    "tech_area": {
+      "type": "string",
+      "enum": [
+        "Wallet Kit",
+        "Soroban SDK",
+        "Soroban Contracts",
+        "Dev Tools",
+        "CLI",
+        "Docs",
+        "Examples",
+        "Other"
+      ],
+      "description": "Technology area category"
+    },
+    "reviewers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "description": "List of GitHub usernames who can review"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open", "claimed", "in-review", "completed", "cancelled"],
+      "description": "Current bounty status"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": ["beginner", "intermediate", "advanced"],
+      "description": "Difficulty level"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["good-first-issue", "help-wanted", "security", "docs", "bug", "feature"]
+      },
+      "description": "Optional tags for categorization"
+    },
+    "sponsor": {
+      "type": "string",
+      "description": "Optional sponsor organization"
+    },
+    "max_claims": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Maximum number of claims allowed (for multi-capped model)"
+    }
+  },
+  "additionalProperties": false
+}
